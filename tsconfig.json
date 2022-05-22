@@ -18,9 +18,11 @@
     "typeRoots": ["./node_modules/@types", "./@types"],
     "baseUrl": "./src",
     "paths": {
-      "@components": ["./components"],
-      "@libs/client": ["./libs/client"],
-      "@libs/server": ["./libs/server"]
+      "_prisma": ["./libs/server/_prisma"],
+      "@components/*": ["./components/*"],
+      "@hooks": ["./hooks"],
+      "@libs/*": ["./libs/*"],
+      "@middlewares": ["./middlewares"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

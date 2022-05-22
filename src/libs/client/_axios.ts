@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 
-export const _axios: AxiosInstance = axios.create({
+const _axios: AxiosInstance = axios.create({
   baseURL: process.env.API_ENDPOINT,
   timeout: 10000, // 10초
 });
@@ -8,6 +8,7 @@ export const _axios: AxiosInstance = axios.create({
 _axios.interceptors.request.use(
   (config) => ({
     ...config,
+    requestTime: new Date(),
     headers: {
       'Content-Type': 'application/json',
       ...config.headers,
@@ -21,14 +22,22 @@ _axios.interceptors.request.use(
 _axios.interceptors.response.use(
   (res) => {
     if (process.env.NODE_ENV === 'development') {
-      console.group(`[ Fetch ${res.status} ] ${res.config.url}`);
+      const { requestTime } = res.config as { requestTime: Date };
+      const spendTime = new Date().getTime() - new Date(requestTime).getTime();
+      const method = res.config.method?.toUpperCase();
+
+      console.groupCollapsed(`[${method} ${res.status} ${spendTime}ms] ${res.config.url}`);
       console.log(res.data);
       console.groupEnd();
     }
     return res;
   },
   (error) => {
-    console.log(`[ Error ] ${error.message}`, error.config);
+    console.groupCollapsed(`[ Error ] ${error.message}`);
+    console.log(error.config);
+    console.groupEnd();
     return Promise.reject(error.response.data);
   },
 );
+
+export default _axios;

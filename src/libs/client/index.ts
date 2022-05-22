@@ -1,2 +1,3 @@
-export * from './utils';
-export * from './api';
+export const cls = (...classnames: any[]) => {
+  return classnames.filter((v) => !!v).join(' ');
+};
